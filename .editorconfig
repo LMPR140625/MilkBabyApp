@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# MCT001: `.UseMauiCommunityToolkit()` Not Found on MauiAppBuilder
+dotnet_diagnostic.MCT001.severity = silent

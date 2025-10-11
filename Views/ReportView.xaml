@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:MilkBabyApp.ViewModels"
+             xmlns:models="clr-namespace:MilkBabyApp.Models"
+             x:Class="MilkBabyApp.Views.ReportView"
+             Title="ReportView">
+    <Shell.TitleView>
+        <StackLayout Orientation="Vertical"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center"
+                     Spacing="10">
+            <Label Text="Reporte"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   TextColor="DarkGreen"
+                   FontAttributes="Bold"
+                   FontSize="Title" />
+        </StackLayout>
+    </Shell.TitleView>
+    <ContentPage.BindingContext>
+        <viewmodel:ReportViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView VerticalScrollBarVisibility="Always"
+                    BackgroundColor="DarkCyan">
+            <CollectionView ItemsSource="{Binding Registros}"
+                            Margin="5">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:REGISTROALIMENTO">
+                        <Frame BorderColor="Transparent"
+                               Padding="0">
+                            <HorizontalStackLayout>
+                                <Frame CornerRadius="15"
+                                       BackgroundColor="White"
+                                       BorderColor="#E0E0E0"
+                                       Padding="8"
+                                       Margin="5"
+                                       HasShadow="True">
+                                    <Label FontFamily="FaBrands"
+                                           WidthRequest="100" />
+                                </Frame>
+                                <VerticalStackLayout VerticalOptions="Center"
+                                                     Padding="10,0,0,0">
+                                    <Label Text="{Binding Unidad}"
+                                           FontSize="17"
+                                           FontAttributes="Bold" />
+                                    <Label Text="{Binding Cantidad, StringFormat='Quantity: {0}'}"
+                                           FontSize="17"
+                                           TextColor="Silver" />
+                                    <Label Text="{Binding FechaHora, StringFormat='Price: ${0}'}"
+                                           FontSize="17"
+                                           TextColor="Silver" />
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

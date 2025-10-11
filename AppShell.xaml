@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MilkBabyApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MilkBabyApp"
+    xmlns:views="clr-namespace:MilkBabyApp.Views"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:FaSolid="clr-namespace:MilkBabyApp.Models"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.BackgroundColor="DarkKhaki"
+    Shell.TabBarBackgroundColor="DarkKhaki"
+    Shell.TabBarForegroundColor="DarkGreen"
+    Shell.TabBarTitleColor="DarkGreen"
+    Shell.TabBarUnselectedColor="LightGreen"
+    Title="MilkBabyApp">
+    
+    <TabBar >
+        <ShellContent Title="Registro"
+                      ContentTemplate="{DataTemplate views:MainPageView}"
+                      Route="MainPage">
+            <ShellContent.Icon >
+                <FontImageSource FontFamily="FaSolid" Glyph="{x:Static FaSolid:FaSolidIcons.House}"></FontImageSource>
+            </ShellContent.Icon>            
+        </ShellContent>
+        <ShellContent Title="Reporte"
+                      ContentTemplate="{DataTemplate views:ReportView}"
+                      Route="MainPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FaSolid"
+                                 Glyph="{x:Static FaSolid:FaSolidIcons.ChartSimple}"></FontImageSource>
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="Configuracion"
+                      ContentTemplate="{DataTemplate views:MainPageView}"
+                      Route="MainPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FaSolid"
+                                 Glyph="{x:Static FaSolid:FaSolidIcons.Gears}"></FontImageSource>
+            </ShellContent.Icon>
+        </ShellContent>
+    </TabBar>
+    
+</Shell>

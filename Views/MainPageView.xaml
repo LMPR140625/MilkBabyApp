@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:MilkBabyApp.ViewModels"
+             xmlns:FaSolid="clr-namespace:MilkBabyApp.Models"
+             x:Class="MilkBabyApp.Views.MainPageView">
+    <Shell.TitleView>
+        <StackLayout Orientation="Vertical" HorizontalOptions="Center" 
+                      VerticalOptions="Center"  
+                     Spacing="10">
+            <Label Text="Registro y detalle"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   TextColor="DarkGreen" FontAttributes="Bold" FontSize="Title"/>
+        </StackLayout>
+    </Shell.TitleView>
+    
+    <ContentPage.BindingContext>
+        <viewmodel:MainViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView VerticalScrollBarVisibility="Always" BackgroundColor="DarkCyan">
+            <Grid RowDefinitions="Auto,Auto">
+                <Frame Grid.Row="0"
+                       Margin="10"
+                       HasShadow="False"
+                       CornerRadius="10" BackgroundColor="LightSeaGreen">
+                    <Grid ColumnDefinitions="Auto,*"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowSpacing="45">
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               HorizontalTextAlignment="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Alta"
+                                          TextColor="Aquamarine"></Span>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Text="Cantidad de Onzas: "
+                               TextColor="Aquamarine"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"></Label>
+                        <Picker Grid.Row="1"
+                                Grid.Column="1"
+                                ItemsSource="{Binding Qty}"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                TextColor="Aquamarine"></Picker>
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Text="Unidad: "
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               TextColor="Aquamarine"></Label>
+                        <Picker Grid.Row="2"
+                                Grid.Column="1"
+                                ItemsSource="{Binding Units}"
+                                SelectedItem="{Binding UnitSelected, Mode=TwoWay}"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                FontAttributes="Bold"
+                                TextColor="Aquamarine"></Picker>
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2"
+                               Text="Hora de comida de tu hermoso bebe"
+                               HorizontalOptions="Center"
+                               TextColor="Aquamarine"></Label>
+                        <TimePicker x:Name="TimePicker"
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Time="{Binding CurrentTime}"
+                                    Format="t"
+                                    HorizontalOptions="Center"
+                                    TextColor="Aquamarine"/>
+                        <Button Grid.Row="5"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                BackgroundColor="DarkSeaGreen"
+                                Text="{x:Static FaSolid:FaSolidIcons.FloppyDisk}"
+                                FontFamily="FaSolid"
+                                FontSize="Large"
+                                ToolTipProperties.Text="Registrar"
+                                Command="{Binding SaveAlimentCommand}"></Button>
+                    </Grid>
+                </Frame>
+                <Frame Grid.Row="1"
+                       HasShadow="False"
+                       Margin="10"
+                       CornerRadius="10"
+                       BackgroundColor="LightSeaGreen">
+                    <Grid RowDefinitions="Auto,Auto,Auto"
+                          RowSpacing="15">
+                        <Label Grid.Row="0"
+                               HorizontalTextAlignment="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Detalle"
+                                          TextColor="Aquamarine"></Span>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Grid.Row="1"
+                               FontSize="Small"
+                               HorizontalTextAlignment="Center"
+                               Text="{Binding SelectedTime, StringFormat='La última vez que se le dio de comer fue a las: {0}'}"
+                               TextColor="Aquamarine"
+                               HorizontalOptions="Center"></Label>
+                        <Label Grid.Row="2"
+                               FontSize="Large"
+                               HorizontalTextAlignment="Center"
+                               HorizontalOptions="Center"
+                               FontAttributes="Bold">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding SelectedTime3,StringFormat=' ♥ La proxima vez que se le dará de comer es a las: {0} ♥'}"
+                                          TextColor="Aquamarine"
+                                          FontAttributes="Bold,Italic"></Span>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+                </Frame>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+    
+    
+</ContentPage>
