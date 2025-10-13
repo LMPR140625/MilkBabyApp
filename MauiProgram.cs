@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MilkBabyApp.Data;
 using MilkBabyApp.Services;
 using MilkBabyApp.ViewModels;
 using MilkBabyApp.Views;
@@ -26,16 +27,18 @@ namespace MilkBabyApp
 
             var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "babymilk.db3");
 
-            builder.Services.AddSingleton<IDatabase>(new Database(dbPath));
-            builder.Services.AddSingleton<ReportViewModel>();
-            builder.Services.AddTransient<MainViewModel>();
-            builder.Services.AddTransient<MainPageView>();
-            builder.Services.AddTransient<ReportView>();
+            //builder.Services.AddSingleton<IDatabase>(new Database(dbPath));
+           
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            
-            
+            builder.Services.AddTransient<ReportViewModel>();
+            builder.Services.AddTransient<MainViewModel>();
+            builder.Services.AddTransient<MainPageView>();
+            builder.Services.AddTransient<ReportView>();
+            builder.Services.AddTransient<SettingsView>();
+            builder.Services.AddTransient<SettingsViewModel>();
+            builder.Services.AddSingleton<DatabaseContext>();
 
 
             return builder.Build();

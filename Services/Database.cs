@@ -9,7 +9,7 @@ namespace MilkBabyApp.Services
     public interface IDatabase
     {
         Task<bool> InsertRegistroAlimento(int cantidad, string unidad, string fechaHora);
-        Task<List<REGISTROALIMENTO>> GetRegistrosAlimentacion();
+        Task<List<Registros>> GetRegistrosAlimentacion();
     }
     public class Database : IDatabase
     {
@@ -30,7 +30,7 @@ namespace MilkBabyApp.Services
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = @"CREATE TABLE IF NOT EXISTS REGISTROALIMENTO(
-                                    IdAlimento INTEGER PRIMARY KEY AUTOINCREMENT,
+                                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     Cantidad   INTEGER NOT NULL,
                                     Unidad TEXT NOT NULL,
                                     DiaHora TEXT NOT NULL                                    
@@ -60,10 +60,15 @@ namespace MilkBabyApp.Services
             else return false;
         }
 
-        public async Task<bool> InsertRegistroAlimento(int cantidad, string unidad, string fechaHora)
+        public async Task<bool> InsertRegistroAlimento(int cantidad, string unidad, string diaHora)
         {
             //using var connection = new SqliteConnection(_dbPath);
-            await database.InsertOrReplaceAsync(new REGISTROALIMENTO(cantidad,unidad,fechaHora));
+            Registros newRecord = new Registros();
+            newRecord.Cantidad = cantidad;
+            newRecord.Unidad = unidad;
+            newRecord.DiaHora = diaHora;
+
+            var result = await database.InsertOrReplaceAsync(newRecord);
             //await connection.OpenAsync();
             //var command = connection.CreateCommand();
             //command.CommandText = $"INSERT INTO REGISTROALIMENTO(Cantidad,Unidad,DiaHora) VALUES({cantidad},{unidad},{fechaHora})";
@@ -73,11 +78,33 @@ namespace MilkBabyApp.Services
             return true;
         }
 
-        public async Task<List<REGISTROALIMENTO>> GetRegistrosAlimentacion()
+        public async Task<List<Registros>> GetRegistrosAlimentacion()
         {
-            List<REGISTROALIMENTO> lst = await database.Table<REGISTROALIMENTO>().ToListAsync();
+            List<Registros> lst = new List<Registros>();
+            try
+            {
+                if (database.TableMappings.Count() > 0)
+                {
+                    lst.Add(new Registros { Cantidad = 2, DiaHora = "10:30", Unidad = "Oz" });
+                }
+                
+            }
+            catch (System.Reflection.TargetInvocationException ex) {
+                if (ex.InnerException != null)
+                {
+                    // Log or inspect ex.InnerException for the specific error details
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Console.WriteLine($"Inner Exception Type: {ex.InnerException.GetType().FullName}");
+                    // Further details like StackTrace can also be examined
+                }
+                else
+                {
+                    Console.WriteLine("TargetInvocationException occurred without an inner exception.");
+                }
+            }
+            return lst;          
 
-            return lst;
+            
         }
     }
 }

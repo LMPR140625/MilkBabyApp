@@ -3,13 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:MilkBabyApp.ViewModels"
              xmlns:models="clr-namespace:MilkBabyApp.Models"
+             xmlns:FaSolid="clr-namespace:MilkBabyApp.Models"
              x:Class="MilkBabyApp.Views.ReportView"
+             x:DataType="viewmodel:ReportViewModel"
              Title="ReportView">
     <Shell.TitleView>
         <StackLayout Orientation="Vertical"
                      HorizontalOptions="Center"
                      VerticalOptions="Center"
-                     Spacing="10">
+                     Spacing="0">
+            <Label Text="{x:Static FaSolid:FaSolidIcons.Bars}"
+                   VerticalOptions="Start"
+                   FontFamily="FaSolid"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="DarkGreen"
+                   FontSize="25"></Label>
             <Label Text="Reporte"
                    HorizontalTextAlignment="Center"
                    VerticalTextAlignment="Center"
@@ -18,45 +27,215 @@
                    FontSize="Title" />
         </StackLayout>
     </Shell.TitleView>
-    <ContentPage.BindingContext>
-        <viewmodel:ReportViewModel />
-    </ContentPage.BindingContext>
+    
     <ContentPage.Content>
+        
         <ScrollView VerticalScrollBarVisibility="Always"
                     BackgroundColor="DarkCyan">
-            <CollectionView ItemsSource="{Binding Registros}"
-                            Margin="5">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:REGISTROALIMENTO">
-                        <Frame BorderColor="Transparent"
-                               Padding="0">
-                            <HorizontalStackLayout>
-                                <Frame CornerRadius="15"
-                                       BackgroundColor="White"
-                                       BorderColor="#E0E0E0"
-                                       Padding="8"
-                                       Margin="5"
-                                       HasShadow="True">
-                                    <Label FontFamily="FaBrands"
-                                           WidthRequest="100" />
-                                </Frame>
-                                <VerticalStackLayout VerticalOptions="Center"
-                                                     Padding="10,0,0,0">
-                                    <Label Text="{Binding Unidad}"
-                                           FontSize="17"
-                                           FontAttributes="Bold" />
-                                    <Label Text="{Binding Cantidad, StringFormat='Quantity: {0}'}"
-                                           FontSize="17"
-                                           TextColor="Silver" />
-                                    <Label Text="{Binding FechaHora, StringFormat='Price: ${0}'}"
-                                           FontSize="17"
-                                           TextColor="Silver" />
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
+            <Grid RowDefinitions="Auto,Auto,Auto">
+                <Frame Grid.Row="0"
+                       HasShadow="False"
+                       Margin="10"
+                       CornerRadius="10"
+                       BackgroundColor="LightSeaGreen">
+                    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto" Margin="0,10,0,0">
+                        <Label Grid.Row="0" Grid.Column="0" Text="{x:Static FaSolid:FaSolidIcons.Bars}"
+                               VerticalOptions="Start"
+                               FontFamily="FaSolid"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Start" Margin="0,10,0,0"></Label>
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Text="Ultimos 5 registros"
+                               FontSize="20"
+                               TextColor="Azure"
+                               Margin="20,2,0,5"
+                               VerticalOptions="Start"
+                               HorizontalOptions="Center"
+                               FontAttributes="Bold"></Label>
+                        <CollectionView x:Name="collectionRecords" Grid.Row="2"
+                                        ItemsSource="{Binding LstRegistros}"
+                                        Margin="45,0,0,0">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Registros">
+                                    <Frame BackgroundColor="Bisque" BorderColor="DarkMagenta"
+                                           Padding="0"
+                                           Margin="0,10,0,0" HeightRequest="120" WidthRequest="250">
+                                        <HorizontalStackLayout Margin="0,0,0,0">
+                                            <VerticalStackLayout VerticalOptions="Center"
+                                                                 Padding="30,0,0,0">
+                                                <Label Text="{x:Static FaSolid:FaSolidIcons.IceCream}"
+                                                       VerticalOptions="Start"
+                                                       FontFamily="FaSolid"
+                                                       FontAttributes="Bold"
+                                                       HorizontalOptions="Center"
+                                                       TextColor="DarkGreen"
+                                                       FontSize="50"></Label>
+                                            </VerticalStackLayout>
+                                            <VerticalStackLayout VerticalOptions="Center"
+                                                                 Padding="-30,0,0,0">
+                                                <Label Text="{Binding DiaHora, StringFormat='{0}'}"
+                                                       FontSize="20" HorizontalTextAlignment="Center"
+                                                       FontAttributes="Bold"
+                                                       TextColor="DarkMagenta"
+                                                       Margin="80,0,0,0" />
+                                                <Label Text="{Binding Cantidad, StringFormat='{0}'}"
+                                                       FontSize="30"
+                                                       FontAttributes="Bold"
+                                                       Margin="110,0,0,0"
+                                                       TextColor="DarkMagenta" />
+                                                <Label Text="{Binding Unidad}"
+                                                       FontSize="17"
+                                                       Margin="95,0,0,10"
+                                                       FontAttributes="Bold"
+                                                       TextColor="DarkMagenta" />                                              
+                                                
+                                            </VerticalStackLayout>
+                                        </HorizontalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
+                </Frame>
+                <Frame Grid.Row="1"
+                       HasShadow="False"
+                       Margin="10"
+                       CornerRadius="10"
+                       BackgroundColor="LightSeaGreen">
+                    <Grid Grid.Row="0"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,Auto">
+                        <Label Grid.Row="0" Grid.Column="0" Text="{x:Static FaSolid:FaSolidIcons.WandSparkles}"
+                           VerticalOptions="Start"
+                           FontFamily="FaSolid"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Start">
+                            </Label>
+                        <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Resumen"
+                                   FontSize="Subtitle"
+                                   TextColor="Azure"
+                                   Margin="-20,-4,2,2"
+                                   FontFamily=""
+                                   VerticalOptions="Start"
+                                   HorizontalOptions="Center"
+                                   FontAttributes="Bold"></Label>
+                        <Frame Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="1,20,10,10"
+                               WidthRequest="150"
+                               HeightRequest="180"
+                               BackgroundColor="CornflowerBlue" HasShadow="True">
+                            <StackLayout Margin="0,-10,0,0">
+                                <Label Text="{x:Static FaSolid:FaSolidIcons.BottleWater}"
+                                       VerticalOptions="Start"
+                                       FontFamily="FaSolid"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="LightCyan"
+                                       FontSize="20"
+                                       Margin="0,0,0,0"></Label>
+                                <Label TextColor="LightCyan" 
+                                       FontAttributes="Bold" 
+                                       FontSize="18" HorizontalTextAlignment="Center"
+                                       Text="Onzas del día: "></Label>
+                                <Label TextColor="DarkKhaki"
+                                       FontAttributes="Bold"
+                                       FontSize="35"
+                                       HorizontalTextAlignment="Center"
+                                       Margin="0,5,0,0"
+                                       Text="7"></Label>
+                            </StackLayout>
                         </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                        <Frame Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="10,20,10,10"
+                               WidthRequest="150"
+                               HeightRequest="180"
+                               BackgroundColor="CornflowerBlue"
+                               HasShadow="True">
+                            <StackLayout  Margin="0,-10,0,0">
+                                <Label Text="{x:Static FaSolid:FaSolidIcons.ThumbsUp}"
+                                       VerticalOptions="Start"
+                                       FontFamily="FaSolid"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="LightCyan"
+                                       FontSize="20"
+                                       Margin="0,0,0,0"></Label>
+                                <Label TextColor="LightCyan"
+                                       FontAttributes="Bold"
+                                       FontSize="18"
+                                       HorizontalTextAlignment="Center"
+                                       Text="Tomas del día:  "></Label>
+                                <Label TextColor="DarkKhaki"
+                                       FontAttributes="Bold"
+                                       FontSize="35"
+                                       HorizontalTextAlignment="Center"
+                                       Margin="0,5,0,0" Text="5"></Label>
+                            </StackLayout>
+                        </Frame>
+                        <Frame Grid.Row="2"
+                               Grid.Column="0"
+                               Margin="1,20,10,10"
+                               WidthRequest="150"
+                               HeightRequest="180"
+                               BackgroundColor="CornflowerBlue"
+                               HasShadow="True">
+                            <StackLayout Margin="0,-10,0,0">
+                                <Label Text="{x:Static FaSolid:FaSolidIcons.CalendarDays}"
+                                       VerticalOptions="Start"
+                                       FontFamily="FaSolid"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="LightCyan"
+                                       FontSize="20"
+                                       Margin="0,0,0,0"></Label>
+                                <Label TextColor="LightCyan"
+                                       FontAttributes="Bold"
+                                       FontSize="18"
+                                       HorizontalTextAlignment="Center" 
+                                       Text="Consumo mensual: "></Label>
+                                <Label TextColor="DarkKhaki"
+                                       FontAttributes="Bold"
+                                       FontSize="35"
+                                       HorizontalTextAlignment="Center"
+                                       Margin="0,5,0,0" Text="2"></Label>
+                            </StackLayout>
+                        </Frame>
+                        <Frame Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="10,20,10,10"
+                               WidthRequest="150"
+                               HeightRequest="180"
+                               BackgroundColor="CornflowerBlue"
+                               HasShadow="True">
+                            <StackLayout Margin="0,-10,0,0">
+                                <Label Text="{x:Static FaSolid:FaSolidIcons.Trash}"
+                                       VerticalOptions="Start"
+                                       FontFamily="FaSolid"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center"
+                                       TextColor="LightCyan"
+                                       FontSize="20"
+                                       Margin="0,0,0,0"></Label>
+                                <Label TextColor="LightCyan"
+                                       FontAttributes="Bold"
+                                       FontSize="13"
+                                       HorizontalTextAlignment="Center" 
+                                       Text="Desperdicio Mensual: "></Label>
+                                <Label TextColor="DarkKhaki"
+                                       FontAttributes="Bold"
+                                       FontSize="35"
+                                       HorizontalTextAlignment="Center"
+                                       Margin="0,5,0,0" Text="2"></Label>
+                            </StackLayout>
+                        </Frame>
+                    </Grid>
+                </Frame>
+            </Grid>  
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>
