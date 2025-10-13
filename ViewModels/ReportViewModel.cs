@@ -1,50 +1,54 @@
-﻿using MilkBabyApp.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Data.Sqlite;
+using MilkBabyApp.Data;
+using MilkBabyApp.Models;
 using MilkBabyApp.Services;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Data.Sqlite;
-using System.Data;
-using SQLite;
+using System.Text.Json;
 
 namespace MilkBabyApp.ViewModels
 {
-    public class ReportViewModel : INotifyPropertyChanged
+    public partial class ReportViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private readonly DatabaseContext _databaseContext;
 
-        private List<REGISTROALIMENTO> _lstResult;
-        private IDatabase _dbConn;
-        private readonly string _dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "babymilk.db3");
-        public ObservableCollection<REGISTROALIMENTO[]> registros { get; set; }
+        #region Properties
+        [ObservableProperty]
+        public bool isLoading = true;
 
-        public ReportViewModel()
+        [ObservableProperty]
+        public List<Registros> lstRegistros;
+
+        #endregion
+        public ReportViewModel(DatabaseContext databaseContext)
         {
-            registros = new ObservableCollection<REGISTROALIMENTO[]>((IEnumerable<REGISTROALIMENTO[]>)GetRegistrosAlimentacion());
+            _databaseContext = databaseContext;
+        }
+        public List<Registros> GetRecordsLastFive()
+        {
+            return (List<Registros>)_databaseContext.GetAllAsync<Registros>().Result;
         }
 
-        
-
-        public void OnPropertyChanged([CallerMemberName] string name = "") =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-               
-        public Task<bool> InsertRegistroAlimento(int cantidad, string unidad, string fechaHora)
+        public async void GetData()
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<REGISTROALIMENTO>> GetRegistrosAlimentacion()
-        {
-            _dbConn = new Database(_dbPath);
-            _lstResult = await _dbConn.GetRegistrosAlimentacion();
-
-            return _lstResult;
+            IsLoading = true;
+            LstRegistros = (List<Registros>) await _databaseContext.GetAllAsync<Registros>();
+            LstRegistros = LstRegistros.OrderByDescending(rec => rec.DiaHora).Take(5).ToList();
+            IsLoading = false;
         }
     }
 }

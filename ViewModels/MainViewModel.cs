@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using Microsoft.Data.Sqlite;
 using MilkBabyApp.Services;
 using MilkBabyApp.Views;
 using System;
@@ -12,111 +13,100 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Text.Json;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using MilkBabyApp.Data;
+using MilkBabyApp.Models;
+using SQLite;
 
 namespace MilkBabyApp.ViewModels
 {
-    public partial class MainViewModel : INotifyPropertyChanged
+    public partial class MainViewModel : BaseViewModel
     {
-        private  IDatabase _dbConn;
-        private readonly string _dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "babymilk.db3");
+        private readonly DatabaseContext _databaseContext;
+
+        [ObservableProperty]
         private string _unitSelected;
-        private int _qtySelected;
-        public ObservableCollection<string> Units { get; set; }
-        public ObservableCollection<int> Qty{ get; set; }
+        [ObservableProperty]
+        public int _qtySelected;
 
-        public TimeSpan _currentTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-        public TimeSpan _selectedTime;
-        public TimeSpan _selectedTime3;
+        [ObservableProperty]
+        List<string> units = new();
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        [ObservableProperty]
+        public bool isLoading = true;
+        [ObservableProperty]
+        public string? searchText;
 
-        public MainViewModel()
+        [ObservableProperty]
+        private TimeSpan selectedTime;
+        [ObservableProperty]
+        private TimeSpan selectedTime3;
+
+        [ObservableProperty]
+        private TimeSpan currentTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+
+        public MainViewModel(DatabaseContext databaseContext)
         {
-            Units = new ObservableCollection<string> { "Onza", "Pieza", "Mililitro" };
-            Qty = new ObservableCollection<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-            UnitSelected = Units.FirstOrDefault();
-            QtySelected = Qty.FirstOrDefault();
-        }       
-
-        public void OnPropertyChanged([CallerMemberName] string name = "") =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        public TimeSpan SelectedTime
-        {
-            get => _selectedTime;
-            set
-            {
-                if (_selectedTime != value)
-                {
-                    _selectedTime = value;
-                    OnPropertyChanged();
-                    SelectedTime3 = _selectedTime.Add(new TimeSpan(3, 0, 0));
-                }
-            }
+            _databaseContext = databaseContext;
+            this.Units.Add("Onza");
+            this.Units.Add("Pieza");
+            this.Units.Add("Mililitro");
         }
 
-        public TimeSpan SelectedTime3
-        {
-            get => _selectedTime3;
-            set
-            {
-                if (_selectedTime3 != value)
-                {
-                    _selectedTime3 = value;
-                    OnPropertyChanged();
 
-                }
-            }
-        }
-
-        public TimeSpan CurrentTime
-        {
-            get => _currentTime;
-            set
-            {
-                if (_currentTime != value)
-                {
-                    _currentTime = value;
-                    OnPropertyChanged();
-                    SelectedTime = _currentTime;
-                }
-            }
-        }
-
-        public string UnitSelected
-        {
-            get => _unitSelected;
-            set
-            {
-                if (_unitSelected != value)
-                {
-                    _unitSelected = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public int QtySelected
+        public int Qty
         {
             get => _qtySelected;
             set
             {
-                if(_qtySelected != value)
+                if (_qtySelected != value)
                 {
                     _qtySelected = value;
                     OnPropertyChanged();
                 }
             }
         }
-
         [RelayCommand]
         private async Task SaveAliment()
         {
-            _dbConn = new Database(_dbPath);
-            bool result = await _dbConn.InsertRegistroAlimento(_qtySelected,_unitSelected, SelectedTime.ToString());
-            if (result) await Shell.Current.DisplayAlert("Exito", "Guardado correctamente", "Salir");
+            bool result = false;
+            try
+            {
+                result = await _databaseContext.AddItemAsync<Registros>(
+                    new Registros() { Id = Guid.NewGuid(),  Cantidad = Qty , DiaHora = SelectedTime.ToString(), Unidad = UnitSelected });
+
+                UpdateDetail();
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            if (result) 
+            {
+
+                await Shell.Current.DisplayAlert("Exito", "Guardado correctamente", "Salir");
+                
+            } 
             else await Shell.Current.DisplayAlert("Alerta", "Problemas al guardar", "Salir");
 
+        }
+
+        internal void GetData()
+        {
+            IsLoading = true;
+            SelectedTime = CurrentTime;
+            SelectedTime3 = SelectedTime.Add(new TimeSpan(3,0,0));
+            IsLoading = false;
+        }
+
+        internal void UpdateDetail()
+        {
+            SelectedTime = CurrentTime;
+            SelectedTime3 = SelectedTime.Add(new TimeSpan(3, 0, 0));
         }
     }
 }

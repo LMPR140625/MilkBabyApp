@@ -2,9 +2,9 @@ using MilkBabyApp.ViewModels;
 
 namespace MilkBabyApp.Views;
 
-public partial class MainPageView : ContentPage
+public partial class SettingsView : ContentPage
 {
-	public MainPageView(MainViewModel viewModel)
+	public SettingsView(SettingsViewModel viewModel)
 	{
 		InitializeComponent();
 		this.BindingContext = viewModel;
@@ -13,7 +13,6 @@ public partial class MainPageView : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-
-		if (this.BindingContext is MainViewModel viewModel) { viewModel.GetData(); }
+        if (this.BindingContext is SettingsViewModel viewModel) { viewModel.GetData(); }
     }
 }

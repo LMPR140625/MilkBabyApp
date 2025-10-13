@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:MilkBabyApp.ViewModels"
+             xmlns:FaSolid="clr-namespace:MilkBabyApp.Models"
+             xmlns:models="clr-namespace:MilkBabyApp.Models"
+             x:Class="MilkBabyApp.Views.SettingsView"
+             x:DataType="viewmodel:SettingsViewModel">
+    <Shell.TitleView>
+        <StackLayout Orientation="Vertical"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center"
+                     Spacing="0">
+            <Label Text="{x:Static FaSolid:FaSolidIcons.Gear}"
+                   VerticalOptions="Start"
+                   FontFamily="FaSolid"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="DarkGreen"
+                   FontSize="25"></Label>
+            <Label Text="Configuración"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"
+                   TextColor="DarkGreen"
+                   FontAttributes="Bold"
+                   FontSize="Title" />
+        </StackLayout>
+    </Shell.TitleView>
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="DarkCyan">
+            <Grid RowDefinitions="Auto">
+                <Frame Grid.Row="0"
+                       HasShadow="False"
+                       Margin="10"
+                       CornerRadius="10"
+                       BackgroundColor="LightSeaGreen">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,Auto" Margin="0,0,0,0">
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Text="{x:Static FaSolid:FaSolidIcons.Gears}"
+                               VerticalOptions="Start"
+                               FontFamily="FaSolid"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Start"></Label>
+                        <Entry Grid.Row="1"
+                               Margin="10,25,10,10"
+                               Grid.Column="0"
+                               FontSize="12"
+                               TextColor="LightYellow"
+                               PlaceholderColor="Beige"
+                               FontAttributes="Bold"
+                               Placeholder="Captura la hora entre comidas"
+                               Keyboard="Text"></Entry>
+                        <Button Grid.Row="1"
+                                Margin="10,20,200,20"
+                                Text="{x:Static FaSolid:FaSolidIcons.FloppyDisk}"
+                                Grid.Column="1"
+                                FontFamily="FaSolid"
+                                TextColor="LightYellow"
+                                FontAttributes="Bold"
+                                BackgroundColor="DarkGreen"
+                                BorderColor="White"
+                                BorderWidth="2"
+                                ToolTipProperties.Text="Agregar Unidad"></Button>
+                        <Entry Grid.Row="2"
+                               Margin="10,25,10,10"
+                               Grid.Column="0" FontSize="12"
+                               TextColor="LightYellow"
+                               PlaceholderColor="Beige"
+                               FontAttributes="Bold"
+                               Placeholder="Captura la nueva Unidad"
+                               Keyboard="Text"></Entry>
+                        <Button Grid.Row="2"
+                                Margin="10,20,200,20" Text="{x:Static FaSolid:FaSolidIcons.FloppyDisk}"
+                                Grid.Column="1"
+                                FontFamily="FaSolid"
+                                TextColor="LightYellow"
+                                FontAttributes="Bold"
+                                BackgroundColor="DarkGreen" BorderColor="White" BorderWidth="2"
+                                ToolTipProperties.Text="Agregar Unidad"></Button>
+                        <Button Grid.Row="3"
+                                Grid.Column="0" 
+                                Grid.ColumnSpan="2"
+                                CornerRadius="15"
+                                Command="{Binding DeleteDataCommand}"
+                                Margin="10,30,190,0"
+                                BackgroundColor="DarkRed"
+                                Text="{ Binding Source={x:Static FaSolid:FaSolidIcons.TrashCan}, 
+                                StringFormat='{}{0} Borrar Registros'}"
+                                FontFamily="FaSolid" TextColor="FloralWhite">                            
+                        </Button>
+                    </Grid>
+                </Frame>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+    
+    
+</ContentPage>
