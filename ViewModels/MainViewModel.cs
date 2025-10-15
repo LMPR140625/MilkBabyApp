@@ -28,22 +28,28 @@ namespace MilkBabyApp.ViewModels
         private readonly DatabaseContext _databaseContext;
 
         [ObservableProperty]
-        private string _unitSelected;
+        public string unitSelected;
+
         [ObservableProperty]
-        public int _qtySelected;
+        public int qtySelected;
 
         [ObservableProperty]
         List<string> units = new();
 
         [ObservableProperty]
         public bool isLoading = true;
+
         [ObservableProperty]
         public string? searchText;
 
         [ObservableProperty]
-        private TimeSpan selectedTime;
+        public TimeSpan selectedTime;
+
         [ObservableProperty]
-        private TimeSpan selectedTime3;
+        public TimeSpan selectedTime3;
+
+        [ObservableProperty]
+        public int qty;
 
         [ObservableProperty]
         private TimeSpan currentTime = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
@@ -55,28 +61,25 @@ namespace MilkBabyApp.ViewModels
             this.Units.Add("Pieza");
             this.Units.Add("Mililitro");
         }
-
-
-        public int Qty
-        {
-            get => _qtySelected;
-            set
-            {
-                if (_qtySelected != value)
-                {
-                    _qtySelected = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+        
         [RelayCommand]
         private async Task SaveAliment()
         {
             bool result = false;
+            UpdateDetail();
             try
             {
+                var lst = await _databaseContext.GetAllAsync<Registros>();
                 result = await _databaseContext.AddItemAsync<Registros>(
-                    new Registros() { Id = Guid.NewGuid(),  Cantidad = Qty , DiaHora = SelectedTime.ToString(), Unidad = UnitSelected });
+                    new Registros() { Id = Guid.NewGuid()
+                                    , IdRegistro = lst.Count() + 1 
+                                    ,  Cantidad = Qty
+                                    , HoraMinutos = SelectedTime.ToString()
+                                    , Unidad = UnitSelected
+                                    , Dia = DateTime.Now.Day
+                                    , Mes = DateTime.Now.Month
+                                    , Anio = DateTime.Now.Year
+                                    , DateRecord = DateTime.Now.Day + "/" + DateTime.Now.Month + "/" + DateTime.Now.Year});
 
                 UpdateDetail();
             }
@@ -95,11 +98,23 @@ namespace MilkBabyApp.ViewModels
 
         }
 
-        internal void GetData()
+        internal async void GetData()
         {
             IsLoading = true;
-            SelectedTime = CurrentTime;
-            SelectedTime3 = SelectedTime.Add(new TimeSpan(3,0,0));
+            //await _databaseContext.DeleteAllAsync<Registros>();
+            var lstResult = await _databaseContext.GetAllAsync<Registros>();
+            var time = await _databaseContext.GetAllAsync<TimeSettings>();
+
+            if(lstResult.Count() > 0)
+            {
+                Registros lastRecord = lstResult.OrderByDescending(rec => rec.IdRegistro).Take(1).First();
+
+                //SelectedTime = CurrentTime;
+                SelectedTime = TimeSpan.Parse(lastRecord.HoraMinutos);
+                SelectedTime3 = SelectedTime.Add(new TimeSpan
+                    (time.Select(ti => ti.TimeInterval).First(), 0, 0));
+            }
+            
             IsLoading = false;
         }
 

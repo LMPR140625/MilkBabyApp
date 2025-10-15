@@ -8,18 +8,21 @@
              x:DataType="viewmodel:MainViewModel">
     <Shell.TitleView>
         <StackLayout Orientation="Vertical" HorizontalOptions="Center" 
-                      VerticalOptions="Center"  
-                     Spacing="-2">
+                      VerticalOptions="Center"
+                     Spacing="0"
+                     Margin="0,0,0,0">
             <Label Text="{x:Static FaSolid:FaSolidIcons.Eye}"
                    VerticalOptions="Start"
                    FontFamily="FaSolid"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    TextColor="DarkGreen"
+                   Margin="-120,0,40,-10"
                    FontSize="25"></Label>
             <Label Text="Registro y detalle"
                    HorizontalTextAlignment="Start"
                    VerticalTextAlignment="Center"
+                   Margin="70,-20,0,0"
                    TextColor="DarkGreen" FontAttributes="Bold" FontSize="25"/>
         </StackLayout>
     </Shell.TitleView>

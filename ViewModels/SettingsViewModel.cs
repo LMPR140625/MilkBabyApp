@@ -19,6 +19,11 @@ namespace MilkBabyApp.ViewModels
         [ObservableProperty]
         public bool isLoading = true;
 
+        [ObservableProperty]
+        public int timeInterval;
+
+        private TimeSettings _timeSettings;
+
         #endregion
 
         public SettingsViewModel(DatabaseContext databaseContext)
@@ -26,6 +31,23 @@ namespace MilkBabyApp.ViewModels
             _databaseContext = databaseContext;
         }
 
+        internal async void GetData()
+        {
+            IsLoading = true;
+            var time = await _databaseContext.GetAllAsync<TimeSettings>();
+
+            if (time.Count() == 0)
+            {
+                var res = await _databaseContext.AddItemAsync<TimeSettings>
+                    (new TimeSettings { Id = new Guid(), TimeInterval = 3});
+                TimeInterval = 3;
+            } else
+            {
+                TimeInterval = time.Select(time => time.TimeInterval).First();
+                _timeSettings = time.First();
+            }
+            IsLoading = false;
+        }
 
         [RelayCommand]
         private async Task DeleteData()
@@ -45,12 +67,11 @@ namespace MilkBabyApp.ViewModels
 
         }
 
-        internal void GetData()
+        [RelayCommand]
+        private async Task UpdateTimeInterval()
         {
-            IsLoading = true;
-
-            IsLoading = false;
+            await _databaseContext.UpdateItemAsync<TimeSettings>(new TimeSettings { Id = _timeSettings.Id, TimeInterval = TimeInterval });
         }
-
+        
     }
 }

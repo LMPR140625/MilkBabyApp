@@ -28,6 +28,18 @@ namespace MilkBabyApp.ViewModels
 
         #region Properties
         [ObservableProperty]
+        public int ozDay;
+
+        [ObservableProperty]
+        public int takesDay;
+
+        [ObservableProperty]
+        public int montlyConsume;
+
+        [ObservableProperty]
+        public int monthTrash;
+
+        [ObservableProperty]
         public bool isLoading = true;
 
         [ObservableProperty]
@@ -46,8 +58,38 @@ namespace MilkBabyApp.ViewModels
         public async void GetData()
         {
             IsLoading = true;
-            LstRegistros = (List<Registros>) await _databaseContext.GetAllAsync<Registros>();
-            LstRegistros = LstRegistros.OrderByDescending(rec => rec.DiaHora).Take(5).ToList();
+            // Retrieve records
+            var lstResult = (List<Registros>) await _databaseContext.GetAllAsync<Registros>();
+
+            // Top 5
+            LstRegistros = lstResult
+                .Where(rec => rec.Mes == DateTime.Now.Month && rec.Anio == DateTime.Now.Year)
+                .OrderByDescending(rec => rec.IdRegistro)
+                .Take(5)
+                .ToList();
+
+            // ozDay
+            OzDay = lstResult
+                .Where(rec => rec.Mes == DateTime.Now.Month && rec.Anio == DateTime.Now.Year && rec.Dia == DateTime.Now.Day)
+                .Select(rec => rec.Cantidad)
+                .Sum();
+
+            // Takes of day
+            TakesDay = lstResult
+                .Where(rec => rec.Mes == DateTime.Now.Month && rec.Anio == DateTime.Now.Year && rec.Dia == DateTime.Now.Day)
+                .Count();
+
+            // Month Consume
+            MontlyConsume= lstResult
+                .Where(rec => rec.Mes == DateTime.Now.Month && rec.Anio == DateTime.Now.Year )
+                .Select(rec => rec.Cantidad)
+                .Sum();
+
+            // Trash month
+
+            MonthTrash = lstResult
+                .Where(rec => rec.Mes == DateTime.Now.Month && rec.Anio == DateTime.Now.Year && rec.Dia == DateTime.Now.Day)
+                .Count();
             IsLoading = false;
         }
     }
