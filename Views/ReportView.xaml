@@ -4,6 +4,7 @@
              xmlns:viewmodel="clr-namespace:MilkBabyApp.ViewModels"
              xmlns:models="clr-namespace:MilkBabyApp.Models"
              xmlns:FaSolid="clr-namespace:MilkBabyApp.Models"
+             xmlns:microchart="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="MilkBabyApp.Views.ReportView"
              x:DataType="viewmodel:ReportViewModel"
              Title="ReportView">
@@ -54,7 +55,8 @@
                                Margin="20,2,0,5"
                                VerticalOptions="Start"
                                HorizontalOptions="Center"
-                               FontAttributes="Bold"></Label>
+                               FontAttributes="Bold"
+                               ></Label>
                         <CollectionView x:Name="collectionRecords" Grid.Row="2"
                                         ItemsSource="{Binding LstRegistros}"
                                         Margin="45,0,0,0">
@@ -75,7 +77,7 @@
                                                        FontSize="50"></Label>
                                             </VerticalStackLayout>
                                             <VerticalStackLayout VerticalOptions="Center"
-                                                                 Padding="-30,0,0,0">
+                                                                 Padding="-50,0,0,0">
                                                 <Label Text="{Binding HoraMinutos, StringFormat='{0}'}"
                                                        FontSize="20" HorizontalTextAlignment="Center"
                                                        FontAttributes="Bold"
@@ -98,6 +100,22 @@
                                                        FontAttributes="Bold"
                                                        TextColor="DarkMagenta" />                                              
                                                 
+                                            </VerticalStackLayout>
+                                            <VerticalStackLayout>
+                                                <Button Text="{ Binding Source={x:Static FaSolid:FaSolidIcons.Trash}}" TextColor="White" 
+                                                        FontFamily="FaSolid" 
+                                                        Margin="10,10,0,0"
+                                                        Background="DarkRed"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ReportViewModel}},Path=DeleteRecordCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        ToolTipProperties.Text="Eliminar">                                                   
+                                                </Button>
+                                                <Button Text="{ Binding Source={x:Static FaSolid:FaSolidIcons.Pencil}}"
+                                                        FontFamily="FaSolid"
+                                                        Margin="10,10,0,0"
+                                                        Background="DarkSeaGreen"
+                                                        ToolTipProperties.Text="Editar"
+                                                        IsEnabled="False"></Button>
                                             </VerticalStackLayout>
                                         </HorizontalStackLayout>
                                     </Frame>
@@ -218,10 +236,10 @@
                                Margin="10,20,10,10"
                                WidthRequest="150"
                                HeightRequest="180"
-                               BackgroundColor="LightGray"
+                               BackgroundColor="CornflowerBlue"
                                HasShadow="True">
-                            <StackLayout Margin="0,-10,0,0">
-                                <Label Text="{x:Static FaSolid:FaSolidIcons.Trash}"
+                            <StackLayout Margin="0,-10,0,0" >
+                                <Label Text="{x:Static FaSolid:FaSolidIcons.BarsProgress}"
                                        VerticalOptions="Start"
                                        FontFamily="FaSolid"
                                        FontAttributes="Bold"
@@ -233,12 +251,13 @@
                                        FontAttributes="Bold"
                                        FontSize="13"
                                        HorizontalTextAlignment="Center" 
-                                       Text="Desperdicio Mensual: "></Label>
-                                <Label TextColor="DarkKhaki"
-                                       FontAttributes="Bold"
-                                       FontSize="15"
-                                       HorizontalTextAlignment="Center"
-                                       Margin="0,5,0,0" Text="Pendiente"></Label>
+                                       Text="Ultimos 3 días: "></Label>
+                                <microchart:ChartView BackgroundColor="CornflowerBlue" 
+                                                       Chart="{Binding BarChartDays}" 
+                                                       IsVisible="True" 
+                                                       HeightRequest="100"
+                                                       WidthRequest="100">                                    
+                                </microchart:ChartView>
                             </StackLayout>
                         </Frame>
                     </Grid>

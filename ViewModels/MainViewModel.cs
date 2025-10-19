@@ -67,35 +67,54 @@ namespace MilkBabyApp.ViewModels
         {
             bool result = false;
             UpdateDetail();
-            try
+            if (Qty < 1 || UnitSelected == null)
             {
-                var lst = await _databaseContext.GetAllAsync<Registros>();
-                result = await _databaseContext.AddItemAsync<Registros>(
-                    new Registros() { Id = Guid.NewGuid()
-                                    , IdRegistro = lst.Count() + 1 
-                                    ,  Cantidad = Qty
-                                    , HoraMinutos = SelectedTime.ToString()
-                                    , Unidad = UnitSelected
-                                    , Dia = DateTime.Now.Day
-                                    , Mes = DateTime.Now.Month
-                                    , Anio = DateTime.Now.Year
-                                    , DateRecord = DateTime.Now.Day + "/" + DateTime.Now.Month + "/" + DateTime.Now.Year});
-
-                UpdateDetail();
+                await Shell.Current.DisplayAlert("Alerta", "Capturar cantidad y/o unidad", "Salir");
             }
-            catch (SqliteException ex)
+            else
             {
-                Console.WriteLine(ex.Message);
+                try
+                {
+                    var lst = await _databaseContext.GetAllAsync<Registros>();
+                    result = await _databaseContext.AddItemAsync<Registros>(
+                        new Registros()
+                        {
+                            Id = Guid.NewGuid()
+                                        ,
+                            IdRegistro = lst.Count() + 1
+                                        ,
+                            Cantidad = Qty
+                                        ,
+                            HoraMinutos = SelectedTime.ToString()
+                                        ,
+                            Unidad = UnitSelected
+                                        ,
+                            Dia = DateTime.Now.Day
+                                        ,
+                            Mes = DateTime.Now.Month
+                                        ,
+                            Anio = DateTime.Now.Year
+                                        ,
+                            DateRecord = DateTime.Now.Day + "/" + DateTime.Now.Month + "/" + DateTime.Now.Year
+                        });
+
+                    UpdateDetail();
+                    Qty = 0;
+                    UnitSelected = "";
+                }
+                catch (SqliteException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                if (result)
+                {
+
+                    await Shell.Current.DisplayAlert("Mensaje", "Guardado correctamente", "Ok");
+
+                }
+                else await Shell.Current.DisplayAlert("Alerta", "Problemas al guardar", "Salir");
             }
-
-            if (result) 
-            {
-
-                await Shell.Current.DisplayAlert("Exito", "Guardado correctamente", "Salir");
-                
-            } 
-            else await Shell.Current.DisplayAlert("Alerta", "Problemas al guardar", "Salir");
-
         }
 
         internal async void GetData()
